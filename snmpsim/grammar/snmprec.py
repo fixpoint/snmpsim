@@ -11,6 +11,8 @@ from pyasn1.type import univ
 from snmpsim.grammar.abstract import AbstractGrammar
 from snmpsim import error
 
+NEWLINE = "<---NEWLINE--->"
+
 
 class SnmprecGrammar(AbstractGrammar):
     alnums = set(octs2ints(str2octs(ascii_letters + digits)))
@@ -38,6 +40,7 @@ class SnmprecGrammar(AbstractGrammar):
     def parse(self, line):
         try:
             oid, tag, value = octs2str(line).strip().split('|', 2)
+            value = value.replace(NEWLINE, "\n")
         except:
             raise error.SnmpsimError('broken record <%s>' % line)
         else:
